@@ -9,6 +9,9 @@ namespace MyNewService\Overview;
  * App Action: cli-load-grammar -> loadOverviewService @ 90
  * App Action: cli-init         -> declareMySelf  @ 50
  * App Action: cli-command      -> processCommand @ 50
+ * App Action: show-overview    -> showOverview   @ 50
+ *
+ * App URI: '/overview\/[0-9]/'   -> show-overview  @ 50
  */
 
  /**
@@ -115,5 +118,28 @@ class OverviewService extends \PHPAnt\Core\AntApp implements \PHPAnt\Core\AppInt
         return ['success' => true];
     }
 
+    function showNextStep($args) {
+        $matches = NULL;
+        preg_match('/overview\/([0-9])/', $args['AE']->Configs->Server->Request->uri,$matches);
+        $step = $matches[1];
+
+        $nextStep = ($step < 9 ? $step + 1 : $step);
+        $lastStep = ($step > 1 ? $step - 1 : $step);
+
+        echo "<p>This step: $step</p>";
+        printf('<a href="/overview/%s/">Move on to step %s</a>',$nextStep,$nextStep);
+        printf('<a href="/overview/%s/">Move back to previous step %s</a>',$lastStep,$lastStep);
+    }
+
+    function showOverview($args) {
+        $args['AE']->runActions('include-navigation');
+
+        //Run steps wizard
+        $this->showNextStep($args);
+
+        $args['AE']->runActions('include-footer');
+        
+        return ['exit' => true];
+    }
 
 }
