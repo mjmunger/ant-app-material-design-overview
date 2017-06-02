@@ -139,7 +139,7 @@ class OverviewService extends \PHPAnt\Core\AntApp implements \PHPAnt\Core\AppInt
 
         $args['AE']->runActions('include-footer');
         
-        return ['exit' => true];
+        return ['success' => true, 'exit' => true];
     }
 
 }
